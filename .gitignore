@@ -1,0 +1,8 @@
+.idea/
+.vscode/
+node_modules/
+dist/
+mysql-data/
+
+.env
+app.http
