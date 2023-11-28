@@ -1,4 +1,4 @@
 # gym-backend
 
 
-Proyecto para implementar CI-CD
+Implementacion de `CI` para despliegue de imagen en `Dockerhub`
