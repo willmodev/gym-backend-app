@@ -71,6 +71,9 @@ jobs:
     - name: Deploy to EC2
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} <<EOF
+          docker stop gym-backend-app
+          sleep 3
+          docker rm gym-backend-app
           docker pull lyra14/gym-backend:$NEW_VERSION
           docker container run -dp 80:3000 --name gym-backend-app -e DB_HOST=${{ secrets.DB_HOST }} -e DB_USER=${{ secrets.DB_USER }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} lyra14/gym-backend:$NEW_VERSION
         EOF
