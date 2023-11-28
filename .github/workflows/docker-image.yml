@@ -29,7 +29,9 @@ jobs:
     - name: Set Ouput
       run: |
         echo "NEW_VERSION=${{ steps.define_version.outputs.version }}" >> $GITHUB_ENV
-        echo "${{ steps.define_version.outputs.version }}" > version.txt
+        echo "::set-output name=version::${{ steps.define_version.outputs.version }}"
+      id: set_version
+
     - name: Docker Login
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
