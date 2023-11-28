@@ -29,7 +29,9 @@ jobs:
     - name: Set Ouput
       run: |
         echo "NEW_VERSION=${{ steps.define_version.outputs.version }}" >> $GITHUB_ENV
-    
+        echo "::set-output name=version::${{ steps.define_version.outputs.version }}"
+      id: set_version
+
     - name: Docker Login
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
@@ -46,6 +48,9 @@ jobs:
       run: |
         docker push lyra14/gym-backend:$NEW_VERSION
         docker push lyra14/gym-backend:latest
+    
+    outputs:
+      version: ${{ steps.set_version.outputs.version }}
 
   deploy:
     needs: build
@@ -58,9 +63,15 @@ jobs:
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
+    - name: Set version
+      run: |
+        echo "NEW_VERSION=${{ needs.build.outputs.version }}" >> $GITHUB_ENV
+        echo "NEW_VERSION is ${{ needs.build.outputs.version }}"
+        
     - name: Deploy to EC2
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} <<EOF
           docker pull lyra14/gym-backend:$NEW_VERSION
-          docker run -dp 80:3000 -e DB_HOST=${{ secrets.DB_HOST }} -e DB_USER=${{ secrets.DB_USER }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} lyra14/gym-backend:$NEW_VERSION
-         EOF
+          docker container run -dp 80:3000 --name gym-backend-app -e DB_HOST=${{ secrets.DB_HOST }} -e DB_USER=${{ secrets.DB_USER }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} lyra14/gym-backend:$NEW_VERSION
+        EOF
+
