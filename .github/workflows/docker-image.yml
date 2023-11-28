@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Workflow CI-CD
 
 on:
   push:
@@ -46,3 +46,21 @@ jobs:
       run: |
         docker push lyra14/gym-backend:$NEW_VERSION
         docker push lyra14/gym-backend:latest
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup SSH
+      run: |
+        mkdir -p ~/.ssh/
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+    - name: Deploy to EC2
+      run: |
+        ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} <<EOF
+          docker pull lyra14/gym-backend:$NEW_VERSION
+          docker run -dp 80:3000 -e DB_HOST=${{ secrets.DB_HOST }} -e DB_USER=${{ secrets.DB_USER }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} lyra14/gym-backend:$NEW_VERSION
+         EOF
