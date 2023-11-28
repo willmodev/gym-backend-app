@@ -25,25 +25,24 @@ jobs:
         minor_pattern: "feat:"
         format: "${major}.${minor}.${patch}-prerelease${increment}"
       id: define_version
+
+    - name: Set Ouput
+      run: |
+        echo "NEW_VERSION=${{ steps.define_version.outputs.version }}" >> $GITHUB_ENV
     
     - name: Docker Login
       env:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
         
     - name: Build Docker Image
-      env:
-        NEW_VERSION: ${{ steps.define_version.outputs.version }}
       run: |
         docker build -t lyra14/gym-backend:$NEW_VERSION .
         docker build -t lyra14/gym-backend:latest .
         
     - name: Push Docker Image
-      env:
-        NEW_VERSION: ${{ steps.define_version.outputs.version }}
       run: |
         docker push lyra14/gym-backend:$NEW_VERSION
         docker push lyra14/gym-backend:latest
