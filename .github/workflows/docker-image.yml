@@ -24,7 +24,7 @@ jobs:
         major_pattern: "major:"
         minor_pattern: "feat:"
         format: "${major}.${minor}.${patch}-prerelease${increment}"
-      id: version
+      id: define_version
     
     - name: Docker Login
       env:
@@ -36,14 +36,14 @@ jobs:
         
     - name: Build Docker Image
       env:
-        NEW_VERSION: ${{ steps.version.outputs.version }}
+        NEW_VERSION: ${{ steps.define_version.outputs.version }}
       run: |
-        docker build -t klerith/docker-graphql:$NEW_VERSION .
-        docker build -t klerith/docker-graphql:latest .
+        docker build -t $DOCKER_USER/gym-backend:$NEW_VERSION .
+        docker build -t $DOCKER_USER/gym-backend:latest .
         
     - name: Push Docker Image
       env:
-        NEW_VERSION: ${{ steps.version.outputs.version }}
+        NEW_VERSION: ${{ steps.define_version.outputs.version }}
       run: |
-        docker push klerith/docker-graphql:$NEW_VERSION
-        docker push klerith/docker-graphql:latest
+        docker push $DOCKER_USER/gym-backend:$NEW_VERSION
+        docker push $DOCKER_USER/gym-backend:latest
