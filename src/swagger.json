@@ -13,6 +13,10 @@
         {
             "name": "plans",
             "description": "Planes del gimnasio"
+        },
+        {
+            "name": "trainer",
+            "description": "Entrenadores del gimnasio"
         }
     ],
     "paths": {
@@ -52,6 +56,80 @@
                     }
                 }
             }
+        },
+        "/api/trainers":{
+            "get": {
+                "tags": [
+                    "trainer"
+                ],
+                "summary": "Obtener todos los entrenadores",
+                "description": "Obtener todos los entrenadores",
+                "operationId": "getTrainers",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "trainer"
+                ],
+                "summary": "Crear un entrenador",
+                "description": "Crear un entrenador",
+                "operationId": "createTrainer",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/post-trainer"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/clients":{
+            "get": {
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Obtener todos los clientes",
+                "description": "Obtener todos los clientes",
+                "operationId": "getClients",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "clients"
+                ],
+                "summary": "Crear un cliente",
+                "description": "Crear un cliente",
+                "operationId": "createClient",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/post-client"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -76,6 +154,67 @@
                     },
                     "price": {
                         "type": "string"
+                    }
+                }
+            },
+            "post-trainer":{
+                "type": "object",
+                "required": [
+                    "names",
+                    "surnames",
+                    "email",
+                    "phone",
+                    "address"
+                ],
+                "properties": {
+                    "names": {
+                        "type": "string"
+                    },
+                    "surnames": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+                
+            },
+            "post-client":{
+                "type": "object",
+                "required": [
+                    "names",
+                    "surnames",
+                    "email",
+                    "phone",
+                    "address"
+                ],
+                "properties": {
+                    "names": {
+                        "type": "string"
+                    },
+                    "surnames": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    },
+                    "planId": {
+                        "type": "number"
+                    },
+                    "trainerId": {
+                        "type": "number"
                     }
                 }
             }
