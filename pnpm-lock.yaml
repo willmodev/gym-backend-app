@@ -40,6 +40,9 @@ devDependencies:
   '@types/supertest':
     specifier: ^2.0.16
     version: 2.0.16
+  '@types/swagger-ui-express':
+    specifier: ^4.1.6
+    version: 4.1.6
   jest:
     specifier: ^29.7.0
     version: 29.7.0(@types/node@20.10.0)
@@ -895,6 +898,13 @@ packages:
     resolution: {integrity: sha512-6c2ogktZ06tr2ENoZivgm7YnprnhYE4ZoXGMY+oA7IuAf17M8FWvujXZGmxLv8y0PTyts4x5A+erSwVUFA8XSg==}
     dependencies:
       '@types/superagent': 4.1.22
+    dev: true
+
+  /@types/swagger-ui-express@4.1.6:
+    resolution: {integrity: sha512-UVSiGYXa5IzdJJG3hrc86e8KdZWLYxyEsVoUI4iPXc7CO4VZ3AfNP8d/8+hrDRIqz+HAaSMtZSqAsF3Nq2X/Dg==}
+    dependencies:
+      '@types/express': 4.17.21
+      '@types/serve-static': 1.15.5
     dev: true
 
   /@types/validator@13.11.7:

@@ -1,0 +1,84 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "CEMPRE",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": ""
+        }
+    ],
+    "tags": [
+        {
+            "name": "plans",
+            "description": "Planes del gimnasio"
+        }
+    ],
+    "paths": {
+        "/api/plans": {
+            "get": {
+                "tags": [
+                    "plans"
+                ],
+                "summary": "Obtener todos los planes",
+                "description": "Obtener todos los planes",
+                "operationId": "getPlans",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "plans"
+                ],
+                "summary": "Crear un plan",
+                "description": "Crear un plan",
+                "operationId": "createPlan",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/post-plan"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "post-plan": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "description",
+                    "durationInDays",
+                    "price"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "durationInDays": {
+                        "type": "string"
+                    },
+                    "price": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

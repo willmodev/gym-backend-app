@@ -25,8 +25,5 @@ WORKDIR /app
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 
-# Definir la variable de entorno PORT
-ENV PORT=3000
-
 # Comando para iniciar la aplicación
 CMD [ "node", "dist/src/app.js" ]
