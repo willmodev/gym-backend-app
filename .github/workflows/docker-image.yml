@@ -63,7 +63,8 @@ jobs:
 
     - name: Set version
       run: |
-        echo "NEW_VERSION=$(cat version.txt)" >> $GITHUB_ENV
+        echo "NEW_VERSION=${{ needs.build.outputs.version }}" >> $GITHUB_ENV
+        echo "NEW_VERSION is ${{ needs.build.outputs.version }}"
         
     - name: Deploy to EC2
       run: |
