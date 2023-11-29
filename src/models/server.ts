@@ -1,12 +1,13 @@
 import express, { Application } from 'express';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
+import fileUpload from 'express-fileupload';
 
-
-import { clientRoutes, planRoutes, trainerRoutes } from '../routes/'
+import { clientRoutes, planRoutes, trainerRoutes, userRoutes, authRoutes } from '../routes/'
 import db from '../db/connection';
 
 import * as swaggerDocument from '../../src/swagger.json';
+
 
 export class Server {
 
@@ -43,15 +44,21 @@ export class Server {
 
     middlewares() {
 
+        this.app.use(express.json());
+        this.app.use(express.urlencoded({ extended: true }));
         this.app.use(cors());
 
-        this.app.use(express.json());
-
-        this.app.use(express.urlencoded({ extended: true }));
 
         // Modifica la URL del servidor en el documento Swagger
-        swaggerDocument.servers[0].url = `http://${ this.serverUrl }:${this.port}`;
+        swaggerDocument.servers[0].url = `http://${this.serverUrl}:${this.port}`;
         this.app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+        // Fileupload - Carga de archivos
+        this.app.use(fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }));
 
     }
 
@@ -59,6 +66,8 @@ export class Server {
         clientRoutes(this.app);
         planRoutes(this.app);
         trainerRoutes(this.app);
+        userRoutes(this.app);
+        authRoutes(this.app);
     }
 
 

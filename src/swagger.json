@@ -1,8 +1,8 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "CEMPRE",
-        "version": "1.0"
+        "title": "GYM API",
+        "version": "1.0.0"
     },
     "servers": [
         {
@@ -11,15 +11,85 @@
     ],
     "tags": [
         {
+            "name": "auth",
+            "description": "Autenticacion de la aplicacion"
+        },
+        {
             "name": "plans",
             "description": "Planes del gimnasio"
         },
         {
             "name": "trainer",
             "description": "Entrenadores del gimnasio"
+        },
+        {
+            "name": "clients",
+            "description": "Clientes del gimnasio"
         }
     ],
     "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "description": "Inicia sesión en la aplicación",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/auth-login"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Inicio de sesión exitoso"
+                    }
+                }
+            }
+        },
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "auth"
+                ],
+                "description": "Crea una cuenta en la aplicación",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/auth-register"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cuenta creada con exito"
+                    }
+                }
+            }
+        },
+        "/api/auth/check-token": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "description": "Verifica si el token es valido",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token valido"
+                    }
+                }
+            }
+        },
         "/api/plans": {
             "get": {
                 "tags": [
@@ -43,7 +113,7 @@
                 "operationId": "createPlan",
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "$ref": "#/components/schemas/post-plan"
                             }
@@ -57,7 +127,7 @@
                 }
             }
         },
-        "/api/trainers":{
+        "/api/trainers": {
             "get": {
                 "tags": [
                     "trainer"
@@ -80,7 +150,7 @@
                 "operationId": "createTrainer",
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "$ref": "#/components/schemas/post-trainer"
                             }
@@ -94,7 +164,7 @@
                 }
             }
         },
-        "/api/clients":{
+        "/api/clients": {
             "get": {
                 "tags": [
                     "clients"
@@ -117,7 +187,7 @@
                 "operationId": "createClient",
                 "requestBody": {
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
                                 "$ref": "#/components/schemas/post-client"
                             }
@@ -133,7 +203,48 @@
         }
     },
     "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
         "schemas": {
+            "auth-login": {
+                "type": "object",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            },
+            "auth-register": {
+                "type": "object",
+                "required": [
+                    "email",
+                    "password",
+                    "role"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    },
+                    "role": {
+                        "type": "string"
+                    }
+                }
+            },
             "post-plan": {
                 "type": "object",
                 "required": [
@@ -153,11 +264,11 @@
                         "type": "string"
                     },
                     "price": {
-                        "type": "string"
+                        "type": "number"
                     }
                 }
             },
-            "post-trainer":{
+            "post-trainer": {
                 "type": "object",
                 "required": [
                     "names",
@@ -183,16 +294,17 @@
                         "type": "string"
                     }
                 }
-                
             },
-            "post-client":{
+            "post-client": {
                 "type": "object",
                 "required": [
                     "names",
                     "surnames",
                     "email",
                     "phone",
-                    "address"
+                    "address",
+                    "trainerId",
+                    "userId"
                 ],
                 "properties": {
                     "names": {
@@ -214,6 +326,9 @@
                         "type": "number"
                     },
                     "trainerId": {
+                        "type": "number"
+                    },
+                    "userId": {
                         "type": "number"
                     }
                 }

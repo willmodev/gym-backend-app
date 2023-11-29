@@ -50,9 +50,11 @@ ClientModel.init({
 // Relation with PlanModel and TrainerModel
 
 PlanModel.hasOne(ClientModel, { as: 'plan', foreignKey: 'planId' });
-TrainerModel.hasOne(ClientModel, { as: 'trainer', foreignKey: 'trainerId' });
+TrainerModel.belongsTo(ClientModel, { as: 'trainer', foreignKey: 'trainerId' });
 
-ClientModel.belongsTo(PlanModel, { foreignKey: 'planId' });
+ClientModel.hasMany(PlanModel, { foreignKey: 'planId' });
 ClientModel.belongsTo(TrainerModel, { foreignKey: 'trainerId' });
+
+
 
 export { ClientModel };
