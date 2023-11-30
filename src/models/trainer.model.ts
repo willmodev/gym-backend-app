@@ -1,6 +1,7 @@
 import { DataTypes, Model } from 'sequelize';
 
 import db from '../db/connection';
+import { UserModel } from './user.model';
 
 class TrainerModel extends Model {
     public id!: number;
@@ -9,7 +10,6 @@ class TrainerModel extends Model {
     public email!: string;
     public phone!: string;
     public address!: string;
-    public status!: boolean;
 }
 
 TrainerModel.init({
@@ -17,7 +17,7 @@ TrainerModel.init({
         type: DataTypes.INTEGER.UNSIGNED,
         autoIncrement: true,
         primaryKey: true,
-      },
+    },
     names: {
         type: DataTypes.STRING(50),
     },
@@ -32,15 +32,16 @@ TrainerModel.init({
     },
     address: {
         type: DataTypes.STRING(50),
-    },
-    status: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
     }
 }, {
-    tableName: 'trainers', 
-    sequelize: db, 
+    tableName: 'trainers',
+    sequelize: db,
     timestamps: false
 })
+
+
+UserModel.hasOne(TrainerModel, {  foreignKey: 'userId' });
+TrainerModel.belongsTo(UserModel, {  as: 'user', foreignKey: 'userId' });
+
 
 export { TrainerModel };

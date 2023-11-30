@@ -27,16 +27,16 @@ RoleModel.init(
     }
 )
 
-RoleModel.afterSync(async () =>{
-    roles.forEach(role => {
-      RoleModel.findOrCreate({
-        where: { name: role },
-        defaults: { name: role },
+RoleModel.afterSync(async () => {
+  for (const role of roles) {
+      await RoleModel.findOrCreate({
+          where: { name: role },
+          defaults: { name: role },
       }).then(([role, created]) => {
-        console.log(role.get({ plain: true }));
-        console.log(created);
+          console.log(role.get({ plain: true }));
+          console.log(created);
       });
-    });
-  })
+  }
+});
 
 export { RoleModel };

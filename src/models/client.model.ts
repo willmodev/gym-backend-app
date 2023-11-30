@@ -3,6 +3,7 @@ import { DataTypes, Model } from 'sequelize';
 import db from '../db/connection';
 import { PlanModel } from './plan.model';
 import { TrainerModel } from './trainer.model';
+import { UserModel } from './user.model';
 
 class ClientModel extends Model {
     public id!: number;
@@ -36,10 +37,6 @@ ClientModel.init({
     },
     address: {
         type: DataTypes.STRING(50),
-    },
-    status: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
     }
 }, {
     tableName: 'clients',
@@ -50,11 +47,13 @@ ClientModel.init({
 // Relation with PlanModel and TrainerModel
 
 PlanModel.hasOne(ClientModel, { as: 'plan', foreignKey: 'planId' });
-TrainerModel.belongsTo(ClientModel, { as: 'trainer', foreignKey: 'trainerId' });
+ClientModel.belongsTo(PlanModel, { as: 'plan', foreignKey: 'planId' });
 
-ClientModel.hasMany(PlanModel, { foreignKey: 'planId' });
-ClientModel.belongsTo(TrainerModel, { foreignKey: 'trainerId' });
+TrainerModel.hasOne(ClientModel, { as: 'trainer', foreignKey: 'trainerId' });
+ClientModel.belongsTo(TrainerModel, { as: 'trainer', foreignKey: 'trainerId' });
 
+UserModel.hasOne(ClientModel, { as: 'user', foreignKey: 'userId' });
+ClientModel.belongsTo(UserModel, { as: 'user', foreignKey: 'userId' });
 
 
 export { ClientModel };

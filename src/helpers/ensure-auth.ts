@@ -3,6 +3,10 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { UserModel, RoleModel } from '../models';
 
 export const ensureAuth = (authHeader: string | undefined): Promise<UserModel|string> => {
+
+    console.log(authHeader);
+    
+
     return new Promise((resolve, reject) => {
 
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -30,7 +34,7 @@ export const ensureAuth = (authHeader: string | undefined): Promise<UserModel|st
 
                     // Validar estado del usuario
                     if (!user.status) return reject({ msg: 'Token inválido - [status=false]' });
-                    resolve(user);
+                    resolve(user.toJSON());
                 })
                 .catch((error) => {
                     console.log(error);

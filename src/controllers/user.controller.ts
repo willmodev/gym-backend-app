@@ -15,6 +15,13 @@ export const getUsers = async (req: Request, res: Response) => {
                 as: 'role',
             }
         });
+
+        // delete user.password map 
+
+        users.forEach((user: UserModel) => {
+            delete user.dataValues.password;
+        })
+
         res.send(users);
     } catch (error) {
         res.status(500).json({
@@ -26,9 +33,21 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const deleteUser = async (req: Request, res: Response) => {
     const { id } = req.params;
+    
 
     try {
-        const userUpdate = await UserModel.update({ status: false }, { where: { id } });
+
+        const user = await UserModel.findOne({ where: { id } });
+
+        // Verificar si el usuario existe
+        if (!user) {
+            return res.status(404).json({
+                msg: 'Usuario no encontrado'
+            });
+        }
+        
+        const userUpdate = await UserModel.update({ status: !user.status }, { where: { id } });
+        
         res.send(userUpdate);
 
     } catch (error) {

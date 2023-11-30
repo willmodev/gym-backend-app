@@ -1,22 +1,47 @@
 import { Request, Response } from 'express';
-import { TrainerModel } from '../models';
+import { TrainerModel, UserModel } from '../models';
+import bcrypt from 'bcryptjs';
 
 
 export const postTrainer= async (req: Request, res: Response) => {
 
-    const { names, surnames, email, phone, address } = req.body;
+    const { names, surnames, email, phone, address, user } = req.body;
+    const { password } = user;
+    const { id: roleId } = req.body.role;
+
     try {
 
-        const client = await TrainerModel.create({
+        //Encrypt Password
+        const salt = bcrypt.genSaltSync();
+        const hashPassword = bcrypt.hashSync(password, salt);
+
+        const trainer = await TrainerModel.create({
             names,
             surnames,
             email,
             phone,
-            address
+            address,
+            user: {
+                email,
+                password: hashPassword,
+                roleId
+            }
+        }, {
+            include: [{
+                model: UserModel,
+                as: 'user'
+            }]
         })
 
-        res.status(201).json( client.toJSON() );
+        // sacar password del client.toJSON()
+
+        const response = trainer.toJSON();
+        delete response.user;
+
+        res.status(201).json(response);
     } catch (error) {
+        console.log(error);
+        
         res.status(500).json({ message: 'Internal Server Error' });
     }
 }

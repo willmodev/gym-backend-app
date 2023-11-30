@@ -25,6 +25,10 @@
         {
             "name": "clients",
             "description": "Clientes del gimnasio"
+        },
+        {
+            "name": "users",
+            "description": "Usuarios"
         }
     ],
     "paths": {
@@ -36,9 +40,9 @@
                 "description": "Inicia sesión en la aplicación",
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/auth-login"
+                                "$ref": "#/components/schemas/auth"
                             }
                         }
                     }
@@ -58,9 +62,9 @@
                 "description": "Crea una cuenta en la aplicación",
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/auth-register"
+                                "$ref": "#/components/schemas/auth"
                             }
                         }
                     }
@@ -90,6 +94,52 @@
                 }
             }
         },
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Obtener todos los usuarios",
+                "description": "Obtener todos los usuarios",
+                "operationId": "getUsers",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/api/users/{id}":{
+            "delete": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "Eliminar un usuario",
+                "description": "Eliminar un usuario",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "operationId": "deleteUser",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID del usuario",
+                        "required": true,
+                        "schema": {
+                            "type": "number"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
         "/api/plans": {
             "get": {
                 "tags": [
@@ -113,7 +163,7 @@
                 "operationId": "createPlan",
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/post-plan"
                             }
@@ -150,7 +200,7 @@
                 "operationId": "createTrainer",
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/post-trainer"
                             }
@@ -187,7 +237,7 @@
                 "operationId": "createClient",
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/post-client"
                             }
@@ -211,7 +261,7 @@
             }
         },
         "schemas": {
-            "auth-login": {
+            "auth": {
                 "type": "object",
                 "required": [
                     "email",
@@ -226,7 +276,7 @@
                     }
                 }
             },
-            "auth-register": {
+            "user-post": {
                 "type": "object",
                 "required": [
                     "email",
@@ -261,7 +311,7 @@
                         "type": "string"
                     },
                     "durationInDays": {
-                        "type": "string"
+                        "type": "number"
                     },
                     "price": {
                         "type": "number"
@@ -275,7 +325,8 @@
                     "surnames",
                     "email",
                     "phone",
-                    "address"
+                    "address",
+                    "user"
                 ],
                 "properties": {
                     "names": {
@@ -292,6 +343,18 @@
                     },
                     "address": {
                         "type": "string"
+                    },
+                    "user": {
+                        "type": "object",
+                        "required": ["password", "role"],
+                        "properties": {
+                            "password": {
+                                "type": "string"
+                            },
+                            "role": {
+                                "type": "string"
+                            }
+                        }
                     }
                 }
             },
@@ -303,8 +366,9 @@
                     "email",
                     "phone",
                     "address",
-                    "trainerId",
-                    "userId"
+                    "user",
+                    "planId",
+                    "trainerId"
                 ],
                 "properties": {
                     "names": {
@@ -322,17 +386,27 @@
                     "address": {
                         "type": "string"
                     },
+                    "user": {
+                        "type": "object",
+                        "required": ["password", "role"],
+                        "properties": {
+                            "password": {
+                                "type": "string"
+                            },
+                            "role": {
+                                "type": "string"
+                            }
+                        }
+                    },
                     "planId": {
                         "type": "number"
                     },
                     "trainerId": {
                         "type": "number"
-                    },
-                    "userId": {
-                        "type": "number"
                     }
                 }
             }
+            
         }
     }
 }

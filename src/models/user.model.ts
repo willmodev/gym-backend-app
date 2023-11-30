@@ -8,6 +8,7 @@ class UserModel extends Model {
     public email!: string;
     public password!: string;
     public status!: boolean;
+    public roleId!: number;
 }
 
 UserModel.init({
