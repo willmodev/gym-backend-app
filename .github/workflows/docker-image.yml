@@ -35,14 +35,14 @@ jobs:
         
     - name: Build Docker Image
       env:
-        NEW_VERSION: ${{ steps.set_version.outputs.version }}
+        NEW_VERSION: ${{ steps.define_version.outputs.version }}
       run: |
         docker build -t lyra14/gym-backend:$NEW_VERSION .
         docker build -t lyra14/gym-backend:latest .
         
     - name: Push Docker Image
       env:
-        NEW_VERSION: ${{ steps.set_version.outputs.version }}
+        NEW_VERSION: ${{ steps.define_version.outputs.version }}
       run: |
         docker push lyra14/gym-backend:$NEW_VERSION
         docker push lyra14/gym-backend:latest
